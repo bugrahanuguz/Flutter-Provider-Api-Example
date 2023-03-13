@@ -5,8 +5,10 @@ import 'package:model_test/models/user_model.dart';
 import 'package:model_test/pages/homes/home_page.dart';
 import 'package:model_test/pages/login/login_page.dart';
 import 'package:model_test/pages/profile/profile_page.dart';
+import 'package:model_test/pages/register/register_page.dart';
 import 'package:model_test/view_models/login_view_model.dart';
 import 'package:model_test/view_models/profile_view_model.dart';
+import 'package:model_test/view_models/register_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -21,7 +23,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileViewModel()),
-        ChangeNotifierProvider(create: (context) => LoginViewModel())
+        ChangeNotifierProvider(create: (context) => LoginViewModel()),
+        ChangeNotifierProvider(create: (context) => RegisterViewModel())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const LoginPage(),
+        home: const RegisterPage(),
       ),
     );
   }
