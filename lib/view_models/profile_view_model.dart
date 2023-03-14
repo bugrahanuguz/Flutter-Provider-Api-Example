@@ -2,33 +2,41 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:model_test/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:model_test/services/response_model.dart';
+
+import '../services/services.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   User? user;
-  final String _baseUrl = 'https://reqres.in/api/users';
+  final Services services = Services();
   List<User> users = [];
   int perPage = 6;
   int page = 1;
   int totalPage = 2;
   ScrollController scrollController = ScrollController();
+  bool loading = false;
 
   Future getUser(int id) async {
-    http.Response response = await http.get(Uri.parse('$_baseUrl/$id'));
-
-    var map = json.decode(response.body);
-    user = User.fromJson(map["data"]);
+    ResponseModel response = await services.getUser(id);
+    if (response.success) {
+      user = User.fromJson(response.data!["data"]);
+    }
+    notifyListeners();
   }
 
   Future getUsers() async {
-    http.Response response =
-        await http.get(Uri.parse(_baseUrl + "?page=$page&per_page=$perPage"));
-    var map = json.decode(response.body);
-    users.clear();
-    totalPage = map["total_pages"];
+    ResponseModel response = await services.getUsers(page);
+    //_baseUrl + "?page=$page&per_page=$perPage"));
+    //var map = json.decode(response.body);
 
-    for (var item in map["data"]) {
-      users.add(User.fromJson(item));
+    if (response.success) {
+      users.clear();
+      totalPage = response.data!["total_pages"];
+      for (var item in response.data!["data"]) {
+        users.add(User.fromJson(item));
+      }
     }
+
     notifyListeners();
   }
 
